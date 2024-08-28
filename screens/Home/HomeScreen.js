@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, ScrollView, Pressable } from 'react-native';
+import NavigationBar from '../NavigationBar';
 
 export default function HomeScreen({navigation}) {
   return (
@@ -18,20 +19,21 @@ export default function HomeScreen({navigation}) {
       {/* Recent Searches Button */}
       <View style={styles.recentSearches}>
         <Button 
-        title="Recent Searches" 
-        onPress={() => navigation.navigate('RecentSearchScreen')}
-        color='green' />
+          title="Recent Searches" 
+          onPress={() => navigation.navigate('RecentSearchScreen')}
+          color='green' 
+        />
       </View>
 
       {/* Categories Section */}
       <ScrollView contentContainerStyle={styles.categories}>
         <View style={styles.categoryRow}>
-        <Pressable onPress = {()=> navigation.navigate('PlantDetailScreen')} >
-          <View style={styles.category}>
-            <Text style={styles.categoryText}>Photo</Text>
-            <Text style={styles.categoryText}>PlantName</Text>
-          </View>
-        </Pressable>
+          <Pressable onPress = {()=> navigation.navigate('PlantDetailScreen')} >
+            <View style={styles.category}>
+              <Text style={styles.categoryText}>Photo</Text>
+              <Text style={styles.categoryText}>PlantName</Text>
+            </View>
+          </Pressable>
           <View style={styles.category}>
             <Text style={styles.categoryText}>Photo</Text>
             <Text style={styles.categoryText}>PlantName</Text>
@@ -44,6 +46,9 @@ export default function HomeScreen({navigation}) {
           <View style={styles.category} />
         </View>
       </ScrollView>
+
+      {/* Navigation Bar */}
+      <NavigationBar />
     </View>
   );
 }
@@ -51,7 +56,7 @@ export default function HomeScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingBottom: 60, // Adjust this to ensure the content is not hidden behind the navigation bar
   },
   header: {
     marginBottom: 16,
