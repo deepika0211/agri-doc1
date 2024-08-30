@@ -1,100 +1,318 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ScrollView, Pressable } from 'react-native';
-import NavigationBar from '../NavigationBar';
+import { View, Text, TextInput, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-export default function HomeScreen({navigation}) {
+import Icon from 'react-native-vector-icons/Ionicons';
+import NavigationBar from '../NavigationBar'; // Ensure this component exists and is correctly implemented
+
+const HomeScreen = () => {
+  const plantCategories = [
+    { id: '1', name: 'Fruit Trees', image: require('../../assets/CamPageImages/back.jpg') },
+    { id: '2', name: 'Vegetables', image: require('../../assets/CamPageImages/back.jpg') },
+    { id: '3', name: 'Flowers', image: require('../../assets/CamPageImages/back.jpg') },
+    // Add more categories as needed
+  ];
+
+  const recentSearches = [
+    'Tomato',
+    'Apple Tree',
+    'Rose',
+    'Potato',
+  ];
+
+  const popularPlants = [
+    { id: '1', name: 'Tomato', image: require('../../assets/homeimages/tomato.jpeg') },
+    { id: '2', name: 'potato', image: require('../../assets/homeimages/potato.jpeg') },
+    { id: '3', name: 'peach', image: require('../../assets/homeimages/peach.jpeg') },
+    { id: '4', name: 'grape', image: require('../../assets/homeimages/grape.jpeg') },
+  ];
+
+  const plantOfTheDay = {
+    name: 'Tomato',
+    image: require('../../assets/CamPageImages/back.jpg'),
+    description: 'A widely cultivated plant with common issues like blight and wilt.',
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <Text style={styles.appName}>AppName</Text>
-      </View>
-
-      {/* Welcome Section */}
-      <View style={styles.welcomeSection}>
-        <Text style={styles.greeting}>Hi, UserName</Text>
-        <Text style={styles.description}>About App Small Description</Text>
-      </View>
-
-      {/* Recent Searches Button */}
-      <View style={styles.recentSearches}>
-        <Button 
-          title="Recent Searches" 
-          onPress={() => navigation.navigate('RecentSearchScreen')}
-          color='green' 
-        />
-      </View>
-
-      {/* Categories Section */}
-      <ScrollView contentContainerStyle={styles.categories}>
-        <View style={styles.categoryRow}>
-          <Pressable onPress = {()=> navigation.navigate('PlantDetailScreen')} >
-            <View style={styles.category}>
-              <Text style={styles.categoryText}>Photo</Text>
-              <Text style={styles.categoryText}>PlantName</Text>
-            </View>
-          </Pressable>
-          <View style={styles.category}>
-            <Text style={styles.categoryText}>Photo</Text>
-            <Text style={styles.categoryText}>PlantName</Text>
-          </View>
-          <View style={styles.category} />
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search for plant diseases..."
+          />
         </View>
-        <View style={styles.categoryRow}>
-          <View style={styles.category} />
-          <View style={styles.category} />
-          <View style={styles.category} />
+
+        {/* Plant of the Day */}
+        <View style={styles.plantOfDayContainer}>
+          <Text style={styles.heading}>Plant of the Day</Text>
+          <View style={styles.plantOfDayCard}>
+            <Image source={plantOfTheDay.image} style={styles.plantOfDayImage} />
+            <View style={styles.plantOfDayText}>
+              <Text style={styles.plantName}>{plantOfTheDay.name}</Text>
+              <Text style={styles.plantDescription}>{plantOfTheDay.description}</Text>
+              <TouchableOpacity style={styles.learnMoreButton}>
+                <Text style={styles.learnMoreText}>Learn More</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* Recent Searches */}
+        <View style={styles.recentSearchesContainer}>
+          <Text style={styles.heading}>Recent Searches</Text>
+          <FlatList
+            horizontal
+            data={recentSearches}
+            renderItem={({ item }) => (
+              <TouchableOpacity style={styles.searchItem}>
+                <Text style={styles.searchItemText}>{item}</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+
+        {/* Description Section */}
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.heading}>Explore Plants</Text>
+          <Text style={styles.descriptionText}>
+            Discover various plants and learn about common diseases affecting them.
+          </Text>
+          {/* Add more plant descriptions here */}
+        </View>
+
+        {/* Popular Plants */}
+        <View style={styles.popularPlantsContainer}>
+          <Text style={styles.heading}>Popular Plants</Text>
+          <FlatList
+            horizontal
+            data={popularPlants}
+            renderItem={({ item }) => (
+              <View style={styles.categoryCard}>
+                <Image source={item.image} style={styles.categoryImage} />
+                <Text style={styles.categoryName}>{item.name}</Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+
+        {/* Plant Categories Section */}
+        <View style={styles.categoriesContainer}>
+          <Text style={styles.heading}>Plant Categories</Text>
+          <FlatList
+            horizontal
+            data={plantCategories}
+            renderItem={({ item }) => (
+              <View style={styles.categoryCard}>
+                <Image source={item.image} style={styles.categoryImage} />
+                <Text style={styles.categoryName}>{item.name}</Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+
+        {/* Disease Alerts */}
+        <View style={styles.alertsContainer}>
+          <Text style={styles.heading}>Disease Alerts</Text>
+          <View style={styles.alertCard}>
+            <Text style={styles.alertText}>Blight outbreak in potato crops reported in several regions.</Text>
+            <TouchableOpacity style={styles.learnMoreButton}>
+              <Text style={styles.learnMoreText}>Learn More</Text>
+            </TouchableOpacity>
+          </View>
+          {/* Add more alerts as needed */}
+        </View>
+
+        {/* User Tips Section */}
+        <View style={styles.tipsContainer}>
+          <Text style={styles.heading}>User Tips</Text>
+          <View style={styles.tipCard}>
+            <Text style={styles.tipText}>"Use neem oil as a natural pesticide for your vegetable garden." - Jane D.</Text>
+          </View>
+          {/* Add more user tips as needed */}
+        </View>
+
+        {/* Plant Disease News */}
+        <View style={styles.newsContainer}>
+          <Text style={styles.heading}>Plant Disease News</Text>
+          <View style={styles.newsCard}>
+            <Text style={styles.newsText}>"New resistant strain of wheat developed to combat rust disease."</Text>
+            <TouchableOpacity style={styles.learnMoreButton}>
+              <Text style={styles.learnMoreText}>Read More</Text>
+            </TouchableOpacity>
+          </View>
+          {/* Add more news items as needed */}
         </View>
       </ScrollView>
-
-      {/* Navigation Bar */}
       <NavigationBar />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 60, // Adjust this to ensure the content is not hidden behind the navigation bar
+    padding: 16,
+    backgroundColor: '#f0f8ff',
   },
-  header: {
-    marginBottom: 16,
-  },
-  appName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  welcomeSection: {
-    marginBottom: 16,
-  },
-  greeting: {
-    fontSize: 20,
-  },
-  description: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  recentSearches: {
-    alignItems: 'flex-end',
-    marginBottom: 16,
-  },
-  categories: {
-    flexGrow: 1,
-  },
-  categoryRow: {
+  searchContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    marginBottom: 20,
   },
-  category: {
-    width: '30%',
-    height: 100,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  plantOfDayContainer: {
+    marginBottom: 20,
+  },
+  plantOfDayCard: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    padding: 10,
     alignItems: 'center',
   },
-  categoryText: {
+  plantOfDayImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
+  plantOfDayText: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  plantName: {
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  plantDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginVertical: 4,
+  },
+  learnMoreButton: {
+    backgroundColor: '#32cd32',
+    padding: 5,
+    borderRadius: 5,
+  },
+  learnMoreText: {
+    color: '#fff',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  recentSearchesContainer: {
+    marginBottom: 20,
+  },
+  searchItem: {
+    backgroundColor: '#e6e6fa',
+    padding: 10,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  searchItemText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  categoriesContainer: {
+    marginBottom: 20,
+  },
+  categoryCard: {
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  categoryImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 8,
+  },
+  categoryName: {
+    fontSize: 14,
+    color: '#333',
+  },
+  popularPlantsContainer: {
+    marginBottom: 20,
+  },
+  alertsContainer: {
+    marginBottom: 20,
+  },
+  alertCard: {
+    backgroundColor: '#ffcccb',
+    padding: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    marginBottom: 10,
+  },
+  alertText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  tipsContainer: {
+    marginBottom: 20,
+  },
+  tipCard: {
+    backgroundColor: '#e6e6fa',
+    padding: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    marginBottom: 10,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  newsContainer: {
+    marginBottom: 20,
+  },
+  newsCard: {
+    backgroundColor: '#e6e6fa',
+    padding: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+    marginBottom: 10,
+  },
+  newsText: {
+    fontSize: 14,
+    color: '#333',
   },
 });
+
+export default HomeScreen;

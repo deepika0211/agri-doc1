@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { auth, firestore, doc, getDoc } from '../../firebase';
-import NavigationBar from '../NavigationBar';
 
 const UserProfileScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -16,12 +15,15 @@ const UserProfileScreen = ({ navigation }) => {
       try {
         const user = auth.currentUser;
         if (user) {
-          const userDocRef = doc(firestore, 'users', user.uid);
+          // Fetch the email directly from Firebase Authentication
+          setEmail(user.email);
+
+          // Fetch additional data from Firestore
+          const userDocRef = doc(firestore, 'username', user.uid);
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             const userData = userDoc.data();
             setName(userData.name || '');
-            setEmail(userData.email || '');
             setPhoneNumber(userData.phoneNumber || '');
             setLocation(userData.location || '');
             setProfilePic(userData.profilePic || null);
@@ -70,7 +72,7 @@ const UserProfileScreen = ({ navigation }) => {
           source={profilePic ? { uri: profilePic } : require('../../assets/CamPageImages/back.jpg')}
           style={styles.profilePic}
         />
-        <Text style={styles.nameText}>{name}</Text>
+        <Text style={styles.nameText}>{name}</Text> {/* Display the username here */}
       </View>
 
       <View style={styles.infoContainer}>
@@ -89,7 +91,7 @@ const UserProfileScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile')}>
+        <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfileScreen')}>
           <Text style={styles.editButtonText}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
@@ -107,8 +109,6 @@ const UserProfileScreen = ({ navigation }) => {
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
       </View>
-
-      <NavigationBar />
     </View>
   );
 };

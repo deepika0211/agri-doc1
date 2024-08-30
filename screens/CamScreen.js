@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
 import NavigationBar from './NavigationBar';
+import * as FileSystem from 'expo-file-system';
 
 const CamScreen = () => {
   const [imageUri, setImageUri] = useState(null);
@@ -56,9 +57,39 @@ const CamScreen = () => {
     }
   };
 
-  const navigateToOutputScreen = () => {
+  const predictImage = async () => {
     if (imageUri) {
-      navigation.navigate('OutputScreen', { imageUri });
+      try {
+        const fileInfo = await FileSystem.getInfoAsync(imageUri);
+        const formData = new FormData();
+        formData.append('file', {
+          uri: fileInfo.uri,
+          name: fileInfo.name || 'image.jpg',
+          type: 'image/jpeg',
+        });
+
+        console.log('Sending request to server with formData:', formData);
+
+        const response = await fetch('http://35.172.185.213:8000/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Server response:', result);
+
+        navigation.navigate('OutputScreen', { imageUri, prediction: result.class_label });
+      } catch (error) {
+        console.error('Network error:', error);
+        Alert.alert('Network Error', `Failed to connect to the server. ${error.message}`);
+      }
     } else {
       Alert.alert('No Image', 'Please select an image before proceeding.');
     }
@@ -86,8 +117,8 @@ const CamScreen = () => {
           {imageUri && (
             <View style={styles.imageContainer}>
               <Image source={{ uri: imageUri }} style={styles.image} />
-              <TouchableOpacity style={styles.predictButton} onPress={navigateToOutputScreen}>
-                <Text style={styles.predictButtonText}>Proceed</Text>
+              <TouchableOpacity style={styles.predictButton} onPress={predictImage}>
+                <Text style={styles.predictButtonText}>Predict</Text>
               </TouchableOpacity>
             </View>
           )}
