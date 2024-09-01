@@ -12,6 +12,8 @@ import RecentSearchScreen from './screens/Home/RecentSearchScreen';
 import PlantDetailScreen from './screens/Home/PlantDetailScreen';
 import UserProfileScreen from './screens/profile/UserProfileScreen';
 import EditProfileScreen from './screens/profile/EditProfileScreen';
+import ImageUploadScreen from './screens/ImageUploadScreen';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -22,11 +24,13 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown:false}} />
         <Stack.Screen name="CamScreen" component={CamScreen} />
+        <Stack.Screen name="ImageUploadScreen" component={ImageUploadScreen} />
         <Stack.Screen name ="OutputScreen" component = {OutputScreen}/>
         <Stack.Screen name ="RecentSearchScreen" component = {RecentSearchScreen}/>
         <Stack.Screen name ="PlantDetailScreen" component = {PlantDetailScreen}/>
         <Stack.Screen name ="UserProfileScreen" component = {UserProfileScreen} options={{headerShown:false}}/>
         <Stack.Screen name ="EditProfileScreen" component = {EditProfileScreen}/>
+        
         {/* other screens */}
       </Stack.Navigator>
     </NavigationContainer>

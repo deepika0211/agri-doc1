@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
 import NavigationBar from './NavigationBar';
 import * as FileSystem from 'expo-file-system';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const CamScreen = () => {
   const [imageUri, setImageUri] = useState(null);
@@ -60,31 +61,37 @@ const CamScreen = () => {
   const predictImage = async () => {
     if (imageUri) {
       try {
+        // Extract the file name and upload to Firebase
         const fileInfo = await FileSystem.getInfoAsync(imageUri);
-        const formData = new FormData();
-        formData.append('file', {
-          uri: fileInfo.uri,
-          name: fileInfo.name || 'image.jpg',
-          type: 'image/jpeg',
-        });
-
-        console.log('Sending request to server with formData:', formData);
-
-        const response = await fetch('http://35.172.185.213:8000/predict', {
+        const fileName = fileInfo.uri.split('/').pop(); // Extract file name
+        const storage = getStorage();
+        const storageRef = ref(storage, 'images/' + fileName);
+  
+        // Upload the image
+        await uploadBytes(storageRef, await fetch(fileInfo.uri).then(res => res.blob()));
+        console.log('Upload successful');
+  
+        // Get the download URL
+        const downloadURL = await getDownloadURL(storageRef);
+        console.log('File available at', downloadURL);
+  
+        // Send the download URL to your backend
+        const response = await fetch('http://18.215.182.109:8000/predict', {
           method: 'POST',
+          body: JSON.stringify({ imageUrl: downloadURL }), // Send JSON with image URL
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
-          body: formData,
         });
-
+  
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
-
+  
         const result = await response.json();
         console.log('Server response:', result);
-
+  
+        // Navigate to OutputScreen with the image URI and prediction
         navigation.navigate('OutputScreen', { imageUri, prediction: result.class_label });
       } catch (error) {
         console.error('Network error:', error);
@@ -94,6 +101,8 @@ const CamScreen = () => {
       Alert.alert('No Image', 'Please select an image before proceeding.');
     }
   };
+  
+  
 
   return (
     <ImageBackground
