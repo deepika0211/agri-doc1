@@ -1,16 +1,18 @@
 import React from 'react';
 import { View, Text, TextInput, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native';
 import { StyleSheet } from 'react-native';
-
 import Icon from 'react-native-vector-icons/Ionicons';
 import NavigationBar from '../NavigationBar'; // Ensure this component exists and is correctly implemented
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
   const plantCategories = [
-    { id: '1', name: 'Fruit Trees', image: require('../../assets/CamPageImages/back.jpg') },
-    { id: '2', name: 'Vegetables', image: require('../../assets/CamPageImages/back.jpg') },
-    { id: '3', name: 'Flowers', image: require('../../assets/CamPageImages/back.jpg') },
-    // Add more categories as needed
+    { id: '1', name: 'Fruit Trees', image: require('../../assets/CamPageImages/back.jpg'), screen: 'Tomato' },
+    { id: '2', name: 'Vegetables', image: require('../../assets/CamPageImages/back.jpg'), screen: 'Potato' },
+    { id: '3', name: 'Flowers', image: require('../../assets/CamPageImages/back.jpg'), screen: 'BellPepper' },
+    // Add more categories with corresponding screens as needed
   ];
 
   const recentSearches = [
@@ -22,9 +24,17 @@ const HomeScreen = () => {
 
   const popularPlants = [
     { id: '1', name: 'Tomato', image: require('../../assets/homeimages/tomato.jpeg') },
-    { id: '2', name: 'potato', image: require('../../assets/homeimages/potato.jpeg') },
-    { id: '3', name: 'peach', image: require('../../assets/homeimages/peach.jpeg') },
-    { id: '4', name: 'grape', image: require('../../assets/homeimages/grape.jpeg') },
+    { id: '2', name: 'Potato', image: require('../../assets/homeimages/potato.jpeg') },
+    { id: '3', name: 'Peach', image: require('../../assets/homeimages/peach.jpeg') },
+    { id: '4', name: 'Grape', image: require('../../assets/homeimages/grape.jpeg') },
+    { id: '5', name: 'Corn', image: require('../../assets/homeimages/corn.jpeg') },
+    { id: '6', name: 'Bell Pepper', image: require('../../assets/homeimages/bellpepper.jpeg') },
+    { id: '7', name: 'Strawberry', image: require('../../assets/homeimages/strawberry.jpg') },
+    { id: '8', name: 'Raspberry', image: require('../../assets/homeimages/rasberry.jpg') },
+    { id: '9', name: 'Blueberry', image: require('../../assets/homeimages/blueberry.jpeg') },
+    { id: '10', name: 'Soyabean', image: require('../../assets/homeimages/soyabean.jpg') },
+   
+
   ];
 
   const plantOfTheDay = {
@@ -46,11 +56,11 @@ const HomeScreen = () => {
         </View>
 
         {/* Plant of the Day */}
-        <View style={styles.plantOfDayContainer}>
+        <View style={styles.plantOfTheDayContainer}>
           <Text style={styles.heading}>Plant of the Day</Text>
-          <View style={styles.plantOfDayCard}>
-            <Image source={plantOfTheDay.image} style={styles.plantOfDayImage} />
-            <View style={styles.plantOfDayText}>
+          <View style={styles.plantOfTheDayCard}>
+            <Image source={plantOfTheDay.image} style={styles.plantOfTheDayImage} />
+            <View style={styles.plantOfTheDayText}>
               <Text style={styles.plantName}>{plantOfTheDay.name}</Text>
               <Text style={styles.plantDescription}>{plantOfTheDay.description}</Text>
               <TouchableOpacity style={styles.learnMoreButton}>
@@ -91,31 +101,16 @@ const HomeScreen = () => {
             horizontal
             data={popularPlants}
             renderItem={({ item }) => (
-              <View style={styles.categoryCard}>
+              <TouchableOpacity style={styles.categoryCard} onPress={() => navigation.navigate(item.name)}>
                 <Image source={item.image} style={styles.categoryImage} />
                 <Text style={styles.categoryName}>{item.name}</Text>
-              </View>
+              </TouchableOpacity>
             )}
             keyExtractor={(item) => item.id}
           />
         </View>
 
-        {/* Plant Categories Section */}
-        <View style={styles.categoriesContainer}>
-          <Text style={styles.heading}>Plant Categories</Text>
-          <FlatList
-            horizontal
-            data={plantCategories}
-            renderItem={({ item }) => (
-              <View style={styles.categoryCard}>
-                <Image source={item.image} style={styles.categoryImage} />
-                <Text style={styles.categoryName}>{item.name}</Text>
-              </View>
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
-
+       
         {/* Disease Alerts */}
         <View style={styles.alertsContainer}>
           <Text style={styles.heading}>Disease Alerts</Text>
@@ -187,10 +182,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
-  plantOfDayContainer: {
+  plantOfTheDayContainer: {
     marginBottom: 20,
   },
-  plantOfDayCard: {
+  plantOfTheDayCard: {
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 8,
@@ -201,12 +196,12 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
   },
-  plantOfDayImage: {
+  plantOfTheDayImage: {
     width: 80,
     height: 80,
     borderRadius: 8,
   },
-  plantOfDayText: {
+  plantOfTheDayText: {
     flex: 1,
     marginLeft: 10,
   },
@@ -266,48 +261,45 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   alertCard: {
-    backgroundColor: '#ffcccb',
+    backgroundColor: '#fff0f5',
     padding: 10,
     borderRadius: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
-    marginBottom: 10,
   },
   alertText: {
     fontSize: 14,
-    color: '#333',
+    color: '#b22222',
   },
   tipsContainer: {
     marginBottom: 20,
   },
   tipCard: {
-    backgroundColor: '#e6e6fa',
+    backgroundColor: '#f5fffa',
     padding: 10,
     borderRadius: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
-    marginBottom: 10,
   },
   tipText: {
     fontSize: 14,
-    color: '#333',
+    color: '#008b8b',
   },
   newsContainer: {
     marginBottom: 20,
   },
   newsCard: {
-    backgroundColor: '#e6e6fa',
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
-    marginBottom: 10,
   },
   newsText: {
     fontSize: 14,

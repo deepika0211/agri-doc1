@@ -1,114 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { auth, firestore, doc, getDoc } from '../../firebase';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { auth } from '../../firebase'; // Ensure you have the correct path to your firebase.js
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons'; // Importing icons from react-native-vector-icons
 
-const UserProfileScreen = ({ navigation }) => {
-  const [name, setName] = useState('');
-  const [profilePic, setProfilePic] = useState(null);
+const UserProfileScreen = ({ navigation }) => { // Added navigation prop
   const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [location, setLocation] = useState('');
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          // Fetch the email directly from Firebase Authentication
-          setEmail(user.email);
-
-          // Fetch additional data from Firestore
-          const userDocRef = doc(firestore, 'username', user.uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setName(userData.name || '');
-            setPhoneNumber(userData.phoneNumber || '');
-            setLocation(userData.location || '');
-            setProfilePic(userData.profilePic || null);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-
-    fetchUserProfile();
+    const user = auth.currentUser;
+    if (user) {
+      setEmail(user.email);
+    }
   }, []);
 
-  const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to log out?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Logout",
-          onPress: () => {
-            auth.signOut().then(() => {
-              navigation.replace('LoginScreen');
-            }).catch(error => {
-              console.error('Error logging out:', error);
-            });
-          }
-        }
-      ]
-    );
+  const handleSettingsPress = () => {
+    navigation.navigate('EditProfileScreen'); // Navigate to Settings screen
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Ionicons name="arrow-back" size={24} color="#fff" onPress={() => navigation.goBack()} />
-        <Text style={styles.headerText}>Profile</Text>
-      </View>
-
-      <View style={styles.profileContainer}>
+      <StatusBar barStyle="light-content" backgroundColor="green" />
+      <View style={styles.header}>
         <Image
-          source={profilePic ? { uri: profilePic } : require('../../assets/CamPageImages/back.jpg')}
-          style={styles.profilePic}
+          source={require('../../assets/CamPageImages/background.jpg')} // Update this path based on your file structure
+          style={styles.avatar}
         />
-        <Text style={styles.nameText}>{name}</Text> {/* Display the username here */}
+        <Text style={styles.name}>BloomBuddy</Text>
+        <TouchableOpacity style={styles.settingsIcon} onPress={handleSettingsPress}>
+          <Ionicons name="settings-outline" size={24} color="#333" />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.infoContainer}>
-        <View style={styles.infoCard}>
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.infoText}>{email}</Text>
-        </View>
-        <View style={styles.infoCard}>
-          <Text style={styles.label}>Phone Number</Text>
-          <Text style={styles.infoText}>{phoneNumber}</Text>
-        </View>
-        <View style={styles.infoCard}>
-          <Text style={styles.label}>Location</Text>
-          <Text style={styles.infoText}>{location}</Text>
-        </View>
+        <Text style={styles.label}>Your Email</Text>
+        <TextInput style={styles.input} value={email} editable={false} />
+
+        <Text style={styles.label}>Phone Number</Text>
+        <TextInput style={styles.input} value="9876543214" editable={false} />
+
+        <Text style={styles.label}>Website</Text>
+        <TextInput style={styles.input} value="www.gfx.com" editable={false} />
+
+        <Text style={styles.label}>Location</Text>
+        <TextInput style={styles.input} value="Bhimavaram" editable={false} />
       </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfileScreen')}>
-          <Text style={styles.editButtonText}>Edit Profile</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.separator} />
-
-      <View style={styles.settingsContainer}>
-        <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('SettingsScreen')}>
-          <Ionicons name="settings-outline" size={24} color="#00796B" />
-          <Text style={styles.settingsButtonText}>Settings</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={24} color="#d32f2f" />
-          <Text style={styles.logoutButtonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+      <StatusBar barStyle="dark-content"/>
     </View>
   );
 };
@@ -116,130 +53,46 @@ const UserProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     padding: 20,
   },
-  headerContainer: {
-    flexDirection: 'row',
+  header: {
     alignItems: 'center',
-    backgroundColor: '#00796B',
-    borderRadius: 10,
-    padding: 15,
     marginBottom: 30,
-    elevation: 5,
+    position: 'relative', // Make sure the icon is positioned correctly
   },
-  headerText: {
+  settingsIcon: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    padding: 10,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10,
+  },
+  name: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#fff',
-    marginLeft: 10,
-    flex: 1,
+    color: '#333', // Bright, dark color for the name
   },
-  profileContainer: {
-    alignItems: 'center',
-    marginBottom: 30,
-    elevation: 3,
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  profilePic: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#00796B',
-  },
-  nameText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  infoContainer: {
-    marginBottom: 30,
-  },
-  infoCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+  designation: {
+    fontSize: 16,
+    color: '#555', // A slightly lighter color for the designation
   },
   label: {
-    fontSize: 16,
-    color: '#555',
+    fontSize: 14,
+    color: '#444', // Bright and dark color for labels
     marginBottom: 5,
   },
-  infoText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  editButton: {
-    backgroundColor: '#00796B',
-    borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 80,
-    elevation: 5,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#ddd',
-    marginVertical: 30,
-  },
-  settingsContainer: {
-    marginTop: 20,
-  },
-  settingsButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    padding: 15,
+  input: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
     marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  settingsButtonText: {
-    fontSize: 18,
-    color: '#00796B',
-    marginLeft: 10,
-  },
-  logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  logoutButtonText: {
-    fontSize: 18,
-    color: '#d32f2f',
-    marginLeft: 10,
+    color: '#000', // Bright black color for input text
   },
 });
 
