@@ -33,8 +33,6 @@ const HomeScreen = () => {
     { id: '8', name: 'Raspberry', image: require('../../assets/homeimages/rasberry.jpg') },
     { id: '9', name: 'Blueberry', image: require('../../assets/homeimages/blueberry.jpeg') },
     { id: '10', name: 'Soyabean', image: require('../../assets/homeimages/soyabean.jpg') },
-   
-
   ];
 
   const plantOfTheDay = {
@@ -44,8 +42,8 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView style={styles.container}>
+    <View style={styles.screenContainer}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <Icon name="search" size={20} color="#666" style={styles.searchIcon} />
@@ -91,7 +89,6 @@ const HomeScreen = () => {
           <Text style={styles.descriptionText}>
             Discover various plants and learn about common diseases affecting them.
           </Text>
-          {/* Add more plant descriptions here */}
         </View>
 
         {/* Popular Plants */}
@@ -110,7 +107,6 @@ const HomeScreen = () => {
           />
         </View>
 
-       
         {/* Disease Alerts */}
         <View style={styles.alertsContainer}>
           <Text style={styles.heading}>Disease Alerts</Text>
@@ -120,7 +116,6 @@ const HomeScreen = () => {
               <Text style={styles.learnMoreText}>Learn More</Text>
             </TouchableOpacity>
           </View>
-          {/* Add more alerts as needed */}
         </View>
 
         {/* User Tips Section */}
@@ -129,7 +124,6 @@ const HomeScreen = () => {
           <View style={styles.tipCard}>
             <Text style={styles.tipText}>"Use neem oil as a natural pesticide for your vegetable garden." - Jane D.</Text>
           </View>
-          {/* Add more user tips as needed */}
         </View>
 
         {/* Plant Disease News */}
@@ -141,7 +135,6 @@ const HomeScreen = () => {
               <Text style={styles.learnMoreText}>Read More</Text>
             </TouchableOpacity>
           </View>
-          {/* Add more news items as needed */}
         </View>
       </ScrollView>
       <NavigationBar />
@@ -150,10 +143,16 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: '#f0f8ff',
+  },
+  scrollViewContent: {
+    paddingBottom: 100, // Add extra padding at the bottom to ensure all content is scrollable
   },
   searchContainer: {
     flexDirection: 'row',
@@ -245,65 +244,52 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   categoryImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 8,
+    width: 80,
+    height: 80,
+    borderRadius: 8,
   },
   categoryName: {
+    marginTop: 5,
     fontSize: 14,
     color: '#333',
-  },
-  popularPlantsContainer: {
-    marginBottom: 20,
   },
   alertsContainer: {
     marginBottom: 20,
   },
   alertCard: {
-    backgroundColor: '#fff0f5',
-    padding: 10,
+    backgroundColor: '#ffcccb',
+    padding: 15,
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
   },
   alertText: {
     fontSize: 14,
-    color: '#b22222',
+    color: '#800000',
+    marginBottom: 10,
   },
   tipsContainer: {
     marginBottom: 20,
   },
   tipCard: {
-    backgroundColor: '#f5fffa',
-    padding: 10,
+    backgroundColor: '#ffe4b5',
+    padding: 15,
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
   },
   tipText: {
     fontSize: 14,
-    color: '#008b8b',
+    color: '#8b4513',
   },
   newsContainer: {
     marginBottom: 20,
   },
   newsCard: {
-    backgroundColor: '#fff',
-    padding: 10,
+    backgroundColor: '#d3d3d3',
+    padding: 15,
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
   },
   newsText: {
     fontSize: 14,
     color: '#333',
+    marginBottom: 10,
   },
 });
 

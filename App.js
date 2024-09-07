@@ -16,6 +16,7 @@ import ImageUploadScreen from './screens/ImageUploadScreen';
 
 
 
+
 import ChatScreen from './screens/ChatScreen';
 import TomatoScreen from './screens/TomatoScreen';
 import PotatoScreen from './screens/PotatoScreen';
@@ -33,9 +34,20 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name = "HomeScreen" component={HomeScreen}/>
-        <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Navigator initialRouteName="UploadScreen">
+        <Stack.Screen name = "HomeScreen" component={HomeScreen}
+        options={{
+          title: "PLANT DOCTOR",
+          headerStyle: {
+            backgroundColor: "green",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: { fontWeight: "bold" },
+          headerStatusBarHeight: StatusBar.currentHeight, // Adjust if needed
+          statusBarStyle: 'light-content', // Set the status bar style/>
+        }}
+        />
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
         <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown:false}} />
         <Stack.Screen name="CamScreen" component={CamScreen} />
         <Stack.Screen name="ImageUploadScreen" component={ImageUploadScreen} />
@@ -67,6 +79,8 @@ export default function App() {
         <Stack.Screen name="Blueberry" component={BlueberryScreen} />
         <Stack.Screen name="Raspberry" component={RaspberryScreen} />
         <Stack.Screen name="Soyabean" component={SoyabeanScreen} />
+
+        
         
         {/* other screens */}
       </Stack.Navigator>

@@ -13,7 +13,7 @@ const LoginScreen = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       if (user) {
-        navigation.replace("CamScreen");
+        navigation.replace("HomeScreen");
       }
     });
 
@@ -25,7 +25,7 @@ const LoginScreen = () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
-        navigation.replace("CamScreen");
+        navigation.replace("HomeScreen");
       })
       .catch(error => alert(error.message));
   };
