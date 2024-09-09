@@ -14,7 +14,7 @@ import UserProfileScreen from './screens/profile/UserProfileScreen';
 import EditProfileScreen from './screens/profile/EditProfileScreen';
 import ImageUploadScreen from './screens/ImageUploadScreen';
 
-
+import UploadScreen from './screens/UploadScreen';
 
 
 import ChatScreen from './screens/ChatScreen';
@@ -79,6 +79,7 @@ export default function App() {
         <Stack.Screen name="Blueberry" component={BlueberryScreen} />
         <Stack.Screen name="Raspberry" component={RaspberryScreen} />
         <Stack.Screen name="Soyabean" component={SoyabeanScreen} />
+        <Stack.Screen name="UploadScreen" component={UploadScreen} />
 
         
         
